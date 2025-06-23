@@ -5,7 +5,7 @@ import type {
   UseFormHandleSubmit,
 } from "react-hook-form";
 import type { LoginFormType } from "../sign/SignIn";
-import KakaoSignIn from "../sign/KakaoSignIn";
+import GoogleSignIn from "../sign/GoogleSignIn";
 
 type LoginProps = {
   register: UseFormRegister<LoginFormType>;
@@ -54,7 +54,7 @@ const Login = ({ register, handleSubmit, errors, onSubmit }: LoginProps) => {
             로그인
           </button>
 
-          <KakaoSignIn />
+          <GoogleSignIn />
 
           <div className="text-center mt-4">
             <button
