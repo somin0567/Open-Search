@@ -1,4 +1,4 @@
-import useSignOut from "../sign/useSignOut";
+import useSignOut from "../hooks/useSignOut";
 
 const Logout = () => {
   const handleSignout = useSignOut();
