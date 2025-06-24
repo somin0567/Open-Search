@@ -1,15 +1,24 @@
 import { useNavigate } from "react-router-dom";
+import AuthChange from "../sign/AuthChange";
 
 const Header = () => {
+  const { isLoggedIn } = AuthChange();
   const navigate = useNavigate();
+
+  const handleHeaderBtn = () => {
+    if (isLoggedIn) {
+      navigate("/signout");
+    } else {
+      navigate("/signin");
+    }
+  };
 
   return (
     <header className="fixed top-0 z-10 w-full navbar text-neutral-content bg-white">
       <div className="flex justify-end w-full p-2">
         <button
-          aria-label="로그인"
           className="btn btn-circle bg-neutral text-neutral-content p-2 rounded-full"
-          onClick={() => navigate("/signin")}
+          onClick={handleHeaderBtn}
         >
           <svg
             width="20"

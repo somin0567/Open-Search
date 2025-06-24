@@ -24,9 +24,9 @@ export const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 export const auth = getAuth(app);
 
-setPersistence(auth, browserLocalPersistence)
-  .then(() => console.log("지속성 설정 완료"))
-  .catch((error) => console.error("지속성 설정 실패:", error));
+setPersistence(auth, browserLocalPersistence).catch((error) =>
+  console.error("에러:", error),
+);
 
 const googleProvider = new GoogleAuthProvider();
 

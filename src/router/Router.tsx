@@ -4,6 +4,7 @@ import Main from "../views/Main";
 import Search from "../views/Search";
 import Register from "../sign/Register";
 import SignIn from "../sign/SignIn";
+import Logout from "../views/Logout";
 
 const Router = () => {
   return (
@@ -11,6 +12,7 @@ const Router = () => {
       <Route path="/" element={<Main />} />
       <Route path="/signup" element={<Register />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/signout" element={<Logout />} />
       <Route path="/search" element={<Search />} />
     </Routes>
   );
