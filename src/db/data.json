@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "name": "ChaGPT",
+    "price": "$20",
+    "category": "텍스트 생성",
+    "free": true
+  },
+  {
+    "id": 2,
+    "name": "Sora",
+    "price": "$20",
+    "category": "영상 생성",
+    "free": true
+  },
+  {
+    "id": 3,
+    "name": "Gemini",
+    "price": "$20",
+    "category": "텍스트 생성",
+    "free": true
+  },
+  {
+    "id": 4,
+    "name": "Midjourney",
+    "price": "$30",
+    "category": "이미지 생성",
+    "free": false
+  },
+  {
+    "id": 5,
+    "name": "Runway",
+    "price": "$12",
+    "category": "이미지 생성",
+    "free": true
+  },
+  {
+    "id": 6,
+    "name": "ClovaNote",
+    "price": "$20",
+    "category": "기록",
+    "free": true
+  },
+  {
+    "id": 7,
+    "name": "Tiro",
+    "price": "$5.83",
+    "category": "기록",
+    "free": true
+  },
+  {
+    "id": 8,
+    "name": "Suno",
+    "price": "$8",
+    "category": "오디오 생성",
+    "free": true
+  },
+  {
+    "id": 9,
+    "name": "Jasper",
+    "price": "$49",
+    "category": "콘텐츠 생성",
+    "free": true
+  },
+  {
+    "id": 10,
+    "name": "Miro",
+    "price": "$8",
+    "category": "협업",
+    "free": true
+  }
+]
