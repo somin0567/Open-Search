@@ -1,7 +1,7 @@
-import useSignOut from "../hooks/useSignOut";
+import SignOut from "../sign/SignOut";
 
 const Logout = () => {
-  const handleSignout = useSignOut();
+  const handleSignout = SignOut();
   return (
     <div className="pt-16 flex justify-center items-center h-screen overflow-hidden">
       <div className="p-10 w-full max-w-sm">

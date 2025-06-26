@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import AuthChange from "../sign/AuthChange";
+import useAuthStore from "../store/AuthStore";
 
 const Header = () => {
-  const { isLoggedIn } = AuthChange();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
 
   const handleHeaderBtn = () => {

@@ -1,14 +1,7 @@
-import { auth, googleProvider, signInWithPopup } from "../firebase";
+import useAuthStore from "../store/AuthStore";
 
 const GoogleSignIn = () => {
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      console.log("구글 로그인 성공");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const handleGoogleLogin = useAuthStore((state) => state.loginWithGoogle);
 
   return (
     <button

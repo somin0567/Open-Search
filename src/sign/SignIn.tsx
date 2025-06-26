@@ -1,8 +1,7 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Login from "../views/Login";
+import useAuthStore from "../store/AuthStore";
 
 export type LoginFormType = {
   email: string;
@@ -16,13 +15,12 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<LoginFormType>();
 
+  const loginWithEmail = useAuthStore((state) => state.loginWithEmail);
   const navigate = useNavigate();
-  const auth = getAuth(app);
 
   const onSubmit = async (data: LoginFormType) => {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      console.log("로그인 성공");
+      await loginWithEmail(data.email, data.password);
       navigate("/");
     } catch (error) {
       console.log(error);
