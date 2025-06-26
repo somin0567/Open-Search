@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import { memo } from "react";
 import Main from "../views/Main";
-import Search from "../views/Search";
 import Register from "../sign/Register";
 import SignIn from "../sign/SignIn";
 import Logout from "../views/Logout";
+import Search from "../common/Search";
 
 const Router = () => {
   return (

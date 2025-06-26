@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 z-10 w-full navbar text-neutral-content bg-white">
+    <header className="fixed top-0 z-20 w-full navbar text-neutral-content bg-white">
       <div className="flex justify-end w-full p-2">
         <button
           className="btn btn-circle bg-neutral text-neutral-content p-2 rounded-full"

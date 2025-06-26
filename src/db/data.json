@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "ChaGPT",
+    "name": "ChatGPT",
     "price": "$20",
     "category": "텍스트 생성",
     "free": true
