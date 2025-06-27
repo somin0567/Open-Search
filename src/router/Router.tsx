@@ -5,6 +5,7 @@ import Register from "../sign/Register";
 import SignIn from "../sign/SignIn";
 import Logout from "../views/Logout";
 import Search from "../common/Search";
+import AiView from "../aiData/AiView";
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signout" element={<Logout />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/view" element={<AiView />} />
     </Routes>
   );
 };
