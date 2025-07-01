@@ -1,7 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/AuthStore";
 
 const GoogleSignIn = () => {
-  const handleGoogleLogin = useAuthStore((state) => state.loginWithGoogle);
+  const loginGoogle = useAuthStore((state) => state.loginWithGoogle);
+  const navigate = useNavigate();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginGoogle();
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <button
