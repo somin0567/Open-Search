@@ -124,23 +124,7 @@ const AiReviewForm = () => {
 
         <div className="mb-4">
           <div className="font-bold mb-1">만족도</div>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <span
-                key={n}
-                className={n <= 4 ? "text-yellow-400" : "text-gray-300"}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <polygon points="10,1 12,7 18,7 13,11 15,17 10,13 5,17 7,11 2,7 8,7" />
-                </svg>
-              </span>
-            ))}
-          </div>
+          {/*별*/}
         </div>
 
         <div className="mb-4">
