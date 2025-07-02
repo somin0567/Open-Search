@@ -1,4 +1,9 @@
+import { useNavigate, useParams } from "react-router-dom";
+
 const AiView = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   return (
     <div className="pt-16 p-8 w-full min-h-screen flex justify-center">
       <div className="w-full max-w-md">
@@ -42,7 +47,10 @@ const AiView = () => {
         <div>
           <div className="font-bold mb-2">리뷰</div>
           <div className="text-gray-400 text-center py-8">리뷰가 없음</div>
-          <button className="btn mt-4 w-full py-2 font-semibold">
+          <button
+            className="btn mt-4 w-full py-2 font-semibold"
+            onClick={() => navigate(`/ai/${id}/review`)}
+          >
             리뷰 쓰기
           </button>
         </div>
