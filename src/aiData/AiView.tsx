@@ -1,18 +1,33 @@
 import { useNavigate, useParams } from "react-router-dom";
+import useAiStore from "../store/AiStore";
 
 const AiView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const getAiById = useAiStore((state) => state.getAiById);
+  const aiItem = getAiById(id!);
+
+  if (!aiItem) {
+    return (
+      <div className="pt-16 min-h-screen flex items-center justify-center bg-white">
+        <div className="text-gray-500">AI 정보를 찾을 수 없습니다.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-16 p-8 w-full min-h-screen flex justify-center">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
           <div className="w-24 h-24 mb-4 flex items-center justify-center">
-            {/*로고*/}
+            <img
+              src={aiItem.image}
+              alt={aiItem.name}
+              className="w-20 h-20 object-contain"
+            />
           </div>
-          <div className="text-2xl font-bold">chat gpt</div>
-          <div className="text-gray-500 text-sm mb-2">텍스트 생성</div>
+          <div className="text-2xl font-bold">{aiItem.name}</div>
+          <div className="text-gray-500 text-sm mb-2">{aiItem.category}</div>
           <div className="flex items-center gap-1">{/* 별점 */}</div>
         </div>
         <hr className="mb-6" />
@@ -22,7 +37,7 @@ const AiView = () => {
           <div className="flex flex-row gap-8 justify-center">
             <div className="flex flex-col items-center">
               <span className="text-gray-500 text-sm">Plus</span>
-              <span className="font-bold">20$</span>
+              <span className="font-bold">{aiItem.price}</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-gray-500 text-sm">Pro</span>
