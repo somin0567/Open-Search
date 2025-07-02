@@ -4,69 +4,79 @@
     "name": "ChatGPT",
     "price": "$20",
     "category": "텍스트 생성",
-    "free": true
+    "free": true,
+    "image": "/images/chatGPT.svg"
   },
   {
     "id": 2,
     "name": "Sora",
     "price": "$20",
     "category": "영상 생성",
-    "free": true
+    "free": true,
+    "image": "/images/sora.svg"
   },
   {
     "id": 3,
     "name": "Gemini",
     "price": "$20",
     "category": "텍스트 생성",
-    "free": true
+    "free": true,
+    "image": "/images/gemini.svg"
   },
   {
     "id": 4,
     "name": "Midjourney",
     "price": "$30",
     "category": "이미지 생성",
-    "free": false
+    "free": false,
+    "image": "/images/midjourney.svg"
   },
   {
     "id": 5,
     "name": "Runway",
     "price": "$12",
     "category": "이미지 생성",
-    "free": true
+    "free": true,
+    "image": "/images/runway.svg"
   },
   {
     "id": 6,
     "name": "ClovaNote",
     "price": "$20",
     "category": "기록",
-    "free": true
+    "free": true,
+    "image": "/images/clovaNote.svg"
   },
   {
     "id": 7,
     "name": "Tiro",
     "price": "$5.83",
     "category": "기록",
-    "free": true
+    "free": true,
+    "image": "/images/tiro.svg"
   },
   {
     "id": 8,
     "name": "Suno",
     "price": "$8",
     "category": "오디오 생성",
-    "free": true
+    "free": true,
+    "image": "/images/suno.svg"
   },
   {
     "id": 9,
     "name": "Jasper",
     "price": "$49",
     "category": "콘텐츠 생성",
-    "free": true
+    "free": true,
+    "image": "/images/jasper.svg"
   },
   {
     "id": 10,
     "name": "Miro",
     "price": "$8",
     "category": "협업",
-    "free": true
+    "free": true,
+    "image": "/images/miro.svg"
   }
 ]
