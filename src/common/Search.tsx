@@ -1,19 +1,24 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import Fuse from "fuse.js";
 import aiDb from "../db/data.json";
-import AiList, { type AiItem } from "../views/AiList";
+import AiList from "../views/AiList";
+import type { AiItem } from "../store/AiStore";
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const [filteredAiList, setFilteredAiList] = useState<AiItem[]>([]);
 
-  useEffect(() => {
-    const filtered = aiDb.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.category.toLowerCase().includes(query.toLowerCase()),
-    );
-    setFilteredAiList(filtered);
-  }, [query]);
+  const fuse = useMemo(
+    () =>
+      new Fuse(aiDb, {
+        keys: ["name", "category"],
+        threshold: 0.6,
+      }),
+    [],
+  );
+
+  const filteredAiList: AiItem[] = query
+    ? fuse.search(query).map((result) => result.item)
+    : aiDb;
 
   return (
     <div className="pt-16 flex flex-col h-screen bg-white">
@@ -28,7 +33,7 @@ const Search = () => {
           />
         </div>
       </div>
-      <div className="pt-16 w-full flex flex-1 overflow-y-auto justify-center">
+      <div className="pt-16 w-full flex-1 overflow-y-auto flex justify-center">
         <div className="w-full max-w-sm">
           <AiList aiList={filteredAiList} />
         </div>

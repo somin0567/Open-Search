@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import type { AiItem } from "../store/AiStore";
 import useAiStore from "../store/AiStore";
 
-const AiList = () => {
-  const aiList = useAiStore((state) => state.aiList);
+interface AiListProps {
+  aiList: AiItem[];
+}
+
+const AiList = ({ aiList }: AiListProps) => {
   const setSelectedAi = useAiStore((state) => state.setSelectedAi);
   const navigate = useNavigate();
 
