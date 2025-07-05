@@ -124,7 +124,7 @@ const AiReviewForm = () => {
             <div className="text-gray-500 text-sm">{aiItem.category}</div>
           </div>
         </div>
-        <hr className="mb-4" />
+        <div className="divider"></div>
 
         <div className="mb-4">
           <div className="font-bold mb-1">사용 목적</div>

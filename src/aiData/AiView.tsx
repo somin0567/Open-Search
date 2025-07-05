@@ -42,7 +42,7 @@ const AiView = () => {
           <div className="text-gray-500 text-sm mb-2">{aiItem.category}</div>
           <div className="flex items-center gap-1">{/* 별점 */}</div>
         </div>
-        <hr className="mb-6" />
+        <div className="divider"></div>
 
         <div className="mb-6 flex flex-col">
           <div className="font-bold mb-2">요금</div>
@@ -69,7 +69,7 @@ const AiView = () => {
             작업
           </button>
         </div>
-        <hr className="mb-6" />
+        <div className="divider"></div>
 
         <div>
           <div className="font-bold mb-2">리뷰</div>
