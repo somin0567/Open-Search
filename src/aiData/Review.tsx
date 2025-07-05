@@ -10,19 +10,22 @@ type State = {
   accuracy: number | null;
   usefulness: number | null;
   speed: number | null;
+  star: number | null;
 };
 
 type Action =
   | { type: "SET_PURPOSE"; payload: string }
   | { type: "SET_ACCURACY"; payload: number }
   | { type: "SET_USEFULNESS"; payload: number }
-  | { type: "SET_SPEED"; payload: number };
+  | { type: "SET_SPEED"; payload: number }
+  | { type: "SET_STAR"; payload: number };
 
 const initialState: State = {
   purpose: null,
   accuracy: null,
   usefulness: null,
   speed: null,
+  star: null,
 };
 
 function reducer(state: State, action: Action): State {
@@ -35,6 +38,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, usefulness: action.payload };
     case "SET_SPEED":
       return { ...state, speed: action.payload };
+    case "SET_STAR":
+      return { ...state, star: action.payload };
     default:
       return state;
   }
@@ -82,7 +87,8 @@ const AiReviewForm = () => {
       !state.purpose ||
       !state.accuracy ||
       !state.usefulness ||
-      !state.speed
+      !state.speed ||
+      !state.star
     ) {
       alert("모든 항목을 입력해주세요");
       return;
@@ -96,6 +102,7 @@ const AiReviewForm = () => {
         accuracy: state.accuracy,
         usefulness: state.usefulness,
         speed: state.speed,
+        star: state.star,
         recommend,
         timestamp: Timestamp.now(),
       });
@@ -107,6 +114,22 @@ const AiReviewForm = () => {
       alert("리뷰 등록에 실패했습니다");
     }
   };
+
+  const renderStars = () => (
+    <div className="rating">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <input
+          key={n}
+          type="radio"
+          name="satisfaction"
+          className="mask mask-star bg-yellow-400"
+          aria-label={`${n} star`}
+          checked={state.star === n}
+          onChange={() => dispatch({ type: "SET_STAR", payload: n })}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div className="pt-16 min-h-screen flex items-center justify-center bg-white">
@@ -180,7 +203,7 @@ const AiReviewForm = () => {
 
         <div className="mb-4">
           <div className="font-bold mb-1">만족도</div>
-          {/* 별점 */}
+          {renderStars()}
         </div>
 
         <div className="mb-4">
