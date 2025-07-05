@@ -10,7 +10,6 @@ const Main = () => {
           <button className="btn" onClick={() => navigate("/search")}>
             검색하기
           </button>
-          <button className="btn">리뷰 쓰기</button>
         </div>
       </div>
     </div>
