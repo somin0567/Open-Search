@@ -1,11 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useAiStore from "../store/AiStore";
+import useAuthStore from "../store/AuthStore";
 
 const AiView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getAiById = useAiStore((state) => state.getAiById);
   const aiItem = getAiById(id!);
+
+  const { user } = useAuthStore();
 
   if (!aiItem) {
     return (
@@ -14,6 +17,15 @@ const AiView = () => {
       </div>
     );
   }
+
+  const handleReviewClick = () => {
+    if (!user) {
+      alert("로그인 후 리뷰 작성해주세요.");
+      navigate("/signin");
+      return;
+    }
+    navigate(`/ai/${id}/review`);
+  };
 
   return (
     <div className="pt-16 p-8 w-full min-h-screen flex justify-center">
@@ -64,7 +76,7 @@ const AiView = () => {
           <div className="text-gray-400 text-center py-8">리뷰가 없음</div>
           <button
             className="btn mt-4 w-full py-2 font-semibold"
-            onClick={() => navigate(`/ai/${id}/review`)}
+            onClick={handleReviewClick}
           >
             리뷰 쓰기
           </button>

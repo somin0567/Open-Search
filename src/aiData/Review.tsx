@@ -1,6 +1,9 @@
 import { useReducer, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAiStore, { type AiItem } from "../store/AiStore";
+import useAuthStore from "../store/AuthStore";
+import { fireStore } from "../firebase";
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
 
 type State = {
   purpose: string | null;
@@ -56,6 +59,8 @@ const AiReviewForm = () => {
   const getAiById = useAiStore((store) => store.getAiById);
   const aiItem: AiItem | undefined = getAiById?.(id!);
 
+  const { user } = useAuthStore();
+
   if (!aiItem) {
     return (
       <div className="pt-16 min-h-screen flex items-center justify-center bg-white">
@@ -64,10 +69,43 @@ const AiReviewForm = () => {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("리뷰가 등록되었습니다");
-    navigate(`/ai/${aiItem.id}`);
+
+    if (!user) {
+      alert("로그인 해주세요");
+      navigate("/signin");
+      return;
+    }
+
+    if (
+      !state.purpose ||
+      !state.accuracy ||
+      !state.usefulness ||
+      !state.speed
+    ) {
+      alert("모든 항목을 입력해주세요");
+      return;
+    }
+
+    try {
+      const reviewRef = doc(collection(fireStore, `ai/${aiItem.id}/reviews`));
+      await setDoc(reviewRef, {
+        userId: user.uid,
+        purpose: state.purpose,
+        accuracy: state.accuracy,
+        usefulness: state.usefulness,
+        speed: state.speed,
+        recommend,
+        timestamp: Timestamp.now(),
+      });
+
+      alert("리뷰가 등록되었습니다");
+      navigate(`/ai/${aiItem.id}`);
+    } catch (error) {
+      console.log("리뷰 등록 실패:", error);
+      alert("리뷰 등록에 실패했습니다");
+    }
   };
 
   return (
@@ -101,6 +139,7 @@ const AiReviewForm = () => {
                 <input
                   type="radio"
                   name="purpose"
+                  value={item}
                   checked={state.purpose === item}
                   onChange={() =>
                     dispatch({ type: "SET_PURPOSE", payload: item })
@@ -114,7 +153,7 @@ const AiReviewForm = () => {
         </div>
 
         {scoreFields.map(({ title, valueKey, actionType }) => (
-          <div key={title} className="mb-4">
+          <div key={valueKey} className="mb-4">
             <div className="font-bold mb-1">{title}</div>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((n) => (
@@ -126,7 +165,8 @@ const AiReviewForm = () => {
                 >
                   <input
                     type="radio"
-                    name={title}
+                    name={valueKey}
+                    value={n}
                     checked={state[valueKey] === n}
                     onChange={() => dispatch({ type: actionType, payload: n })}
                     className="hidden"
@@ -148,7 +188,7 @@ const AiReviewForm = () => {
           <input
             type="text"
             className="input w-full"
-            placeholder="내용"
+            placeholder="추천 작업을 입력해주세요"
             value={recommend}
             onChange={(e) => setRecommend(e.target.value)}
           />
