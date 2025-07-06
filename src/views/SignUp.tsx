@@ -31,9 +31,12 @@ const SignUp = ({
 
   return (
     <div className="pt-16 flex justify-center items-center h-screen overflow-hidden">
-      <div className="p-10 w-full max-w-sm">
+      <div className="p-10 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl">
         <h2 className="text-2xl font-bold text-center mb-8">회원 가입</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4 sm:gap-6"
+        >
           <input
             type="email"
             placeholder="이메일"
@@ -44,10 +47,12 @@ const SignUp = ({
                 message: "유효한 이메일 주소를 입력해주세요.",
               },
             })}
-            className="input w-full px-4 py-2"
+            className="input w-full px-4 py-2 text-base sm:text-lg"
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            <p className="text-red-500 text-sm sm:text-base mt-1">
+              {errors.email.message}
+            </p>
           )}
           <input
             type="password"
@@ -63,10 +68,10 @@ const SignUp = ({
                 message: "비밀번호는 12자 이하이어야 합니다.",
               },
             })}
-            className="input w-full px-4 py-2"
+            className="input w-full px-4 py-2 text-base sm:text-lg"
           />
           {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm sm:text-base mt-1">
               {errors.password.message}
             </p>
           )}
@@ -78,10 +83,10 @@ const SignUp = ({
               validate: (value) =>
                 value === password || "비밀번호가 일치하지 않습니다.",
             })}
-            className="input w-full px-4 py-2"
+            className="input w-full px-4 py-2 text-base sm:text-lg"
           />
           {errors.passwordConfirm && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm sm:text-base mt-1">
               {errors.passwordConfirm.message}
             </p>
           )}
@@ -95,17 +100,17 @@ const SignUp = ({
                 message: "닉네임은 10자 이내로 입력해주세요.",
               },
             })}
-            className="input w-full px-4 py-2"
-          />{" "}
+            className="input w-full px-4 py-2 text-base sm:text-lg"
+          />
           {errors.nickname && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm sm:text-base mt-1">
               {errors.nickname.message}
             </p>
           )}
           <button
             type="submit"
             onClick={() => navigate("/signin")}
-            className="btn w-full mt-4 py-2"
+            className="btn w-full mt-4 py-2 text-base sm:text-lg"
           >
             회원 가입
           </button>

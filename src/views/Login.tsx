@@ -19,9 +19,12 @@ const Login = ({ register, handleSubmit, errors, onSubmit }: LoginProps) => {
 
   return (
     <div className="pt-16 flex justify-center items-center h-screen overflow-hidden">
-      <div className="p-10 w-full max-w-sm">
+      <div className="p-10 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl">
         <h2 className="text-2xl font-bold text-center mb-8">로그인</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4 sm:gap-6"
+        >
           <input
             type="email"
             placeholder="이메일"
@@ -32,10 +35,12 @@ const Login = ({ register, handleSubmit, errors, onSubmit }: LoginProps) => {
                 message: "유효한 이메일 주소를 입력해주세요.",
               },
             })}
-            className="input w-full px-4 py-2"
+            className="input w-full px-4 py-2 text-base sm:text-lg"
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            <p className="text-red-500 text-sm sm:text-base mt-1">
+              {errors.email.message}
+            </p>
           )}
           <input
             type="password"
@@ -43,14 +48,17 @@ const Login = ({ register, handleSubmit, errors, onSubmit }: LoginProps) => {
             {...register("password", {
               required: true,
             })}
-            className="input w-full px-4 py-2"
+            className="input w-full px-4 py-2 text-base sm:text-lg"
           />
           {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm sm:text-base mt-1">
               {errors.password.message}
             </p>
           )}
-          <button type="submit" className="btn w-full mt-4 py-2">
+          <button
+            type="submit"
+            className="btn w-full mt-4 py-2 text-base sm:text-lg"
+          >
             로그인
           </button>
 
@@ -59,7 +67,7 @@ const Login = ({ register, handleSubmit, errors, onSubmit }: LoginProps) => {
           <div className="text-center mt-4">
             <button
               onClick={() => navigate("/signup")}
-              className="text-blue-500 underline"
+              className="text-blue-500 underline text-sm sm:text-base"
             >
               회원가입 하기
             </button>

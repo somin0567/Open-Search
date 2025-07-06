@@ -148,29 +148,34 @@ const AiReviewForm = () => {
 
   return (
     <div className="pt-16 min-h-screen flex items-center justify-center bg-white">
-      <form className="w-full max-w-md p-8" onSubmit={handleSubmit}>
-        <div className="flex items-center gap-4 mb-6">
+      <form
+        className="w-full max-w-md sm:max-w-lg md:max-w-xl p-8 sm:p-10"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex items-center gap-4 sm:gap-6 mb-6">
           <div className="w-16 h-16 flex items-center justify-center">
             <img
               src={aiItem.image}
               alt={aiItem.name}
-              className="w-12 h-12 object-contain"
+              className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
             />
           </div>
           <div>
-            <div className="text-lg font-bold">{aiItem.name}</div>
-            <div className="text-gray-500 text-sm">{aiItem.category}</div>
+            <div className="text-lg sm:text-xl font-bold">{aiItem.name}</div>
+            <div className="text-gray-500 text-sm sm:text-base">
+              {aiItem.category}
+            </div>
           </div>
         </div>
         <div className="divider"></div>
 
         <div className="mb-4">
           <div className="font-bold mb-1">사용 목적</div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 sm:gap-4 flex-wrap">
             {["학습", "비즈니스", "취미", "기타"].map((item) => (
               <label
                 key={item}
-                className={`flex items-center gap-1 border rounded-2xl px-3 py-1 text-sm cursor-pointer ${
+                className={`flex items-center gap-1 border rounded-2xl px-3 py-1 text-sm sm:text-base cursor-pointer ${
                   state.purpose === item ? "bg-gray-200" : ""
                 }`}
               >
@@ -193,11 +198,11 @@ const AiReviewForm = () => {
         {scoreFields.map(({ title, valueKey, actionType }) => (
           <div key={valueKey} className="mb-4">
             <div className="font-bold mb-1">{title}</div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 sm:gap-4">
               {[1, 2, 3, 4, 5].map((n) => (
                 <label
                   key={n}
-                  className={`flex items-center justify-center w-8 h-8 border rounded-lg cursor-pointer ${
+                  className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 border rounded-lg cursor-pointer ${
                     state[valueKey] === n ? "bg-gray-200" : ""
                   }`}
                 >
@@ -209,7 +214,7 @@ const AiReviewForm = () => {
                     onChange={() => dispatch({ type: actionType, payload: n })}
                     className="hidden"
                   />
-                  <span>{n}</span>
+                  <span className="text-base sm:text-lg">{n}</span>
                 </label>
               ))}
             </div>
@@ -225,14 +230,18 @@ const AiReviewForm = () => {
           <div className="font-bold mb-1">추천 작업</div>
           <input
             type="text"
-            className="input w-full"
+            name="recommend"
+            className="input w-full text-base sm:text-lg"
             placeholder="추천 작업을 입력해주세요"
             value={recommend}
             onChange={(e) => setRecommend(e.target.value)}
           />
         </div>
 
-        <button className="w-full py-2 btn font-semibold" type="submit">
+        <button
+          className="w-full py-2 btn font-semibold text-base sm:text-lg"
+          type="submit"
+        >
           작성 완료
         </button>
       </form>
