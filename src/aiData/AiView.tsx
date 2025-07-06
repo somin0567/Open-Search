@@ -1,6 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useAiStore from "../store/AiStore";
 import useAuthStore from "../store/AuthStore";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { fireStore } from "../firebase";
 
 const AiView = () => {
   const navigate = useNavigate();
@@ -9,6 +12,37 @@ const AiView = () => {
   const aiItem = getAiById(id!);
 
   const { user } = useAuthStore();
+
+  const [avgStar, setAvgStar] = useState<number | null>(null);
+  const [recommendList, setRecommendList] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!aiItem) return;
+      const reviewsRef = collection(fireStore, `ai/${aiItem.id}/reviews`);
+      const snapshot = await getDocs(reviewsRef);
+      const reviews = snapshot.docs.map((doc) => doc.data());
+
+      const starArr = reviews
+        .map((r) => r.star)
+        .filter((v): v is number => typeof v === "number");
+      const avg =
+        starArr.length > 0
+          ? starArr.reduce((a, b) => a + b, 0) / starArr.length
+          : null;
+      setAvgStar(avg);
+
+      const recommends = [
+        ...new Set(
+          reviews
+            .map((r) => r.recommend)
+            .filter((v): v is string => !!v && v.trim() != ""),
+        ),
+      ];
+      setRecommendList(recommends);
+    };
+    fetchReviews();
+  }, [aiItem]);
 
   if (!aiItem) {
     return (
@@ -40,7 +74,33 @@ const AiView = () => {
           </div>
           <div className="text-2xl font-bold">{aiItem.name}</div>
           <div className="text-gray-500 text-sm mb-2">{aiItem.category}</div>
-          <div className="flex items-center gap-1">{/* 별점 */}</div>
+          <div className="rating rating-lg rating-half">
+            <input
+              type="radio"
+              name="avg-rating"
+              className="rating-hidden"
+              aria-label="0 stars"
+              readOnly
+              tabIndex={-1}
+            />
+            {[...Array(10)].map((_, i) => {
+              const value = (i + 1) * 0.5;
+              const checked =
+                typeof avgStar === "number" && Math.abs(value - avgStar) < 0.26;
+              return (
+                <input
+                  key={value}
+                  type="radio"
+                  name="avg-rating"
+                  className={`mask mask-star-2 ${i % 2 === 0 ? "mask-half-1" : "mask-half-2"} bg-yellow-400`}
+                  aria-label={`${value} star`}
+                  checked={checked}
+                  readOnly
+                  tabIndex={-1}
+                />
+              );
+            })}
+          </div>
         </div>
         <div className="divider"></div>
 
@@ -58,16 +118,22 @@ const AiView = () => {
           </div>
         </div>
 
-        <div className="mb-6 flex gap-2">
-          <button className="border rounded-full px-4 py-1 text-sm">
-            추천 작업
-          </button>
-          <button className="border rounded-full px-4 py-1 text-sm">
-            추천
-          </button>
-          <button className="border rounded-full px-4 py-1 text-sm">
-            작업
-          </button>
+        <div className="mb-6 flex gap-2 flex-wrap">
+          {recommendList.length > 0 ? (
+            recommendList.map((rec) => (
+              <button
+                key={rec}
+                className="border rounded-full px-4 py-1 text-sm"
+                disabled
+              >
+                {rec}
+              </button>
+            ))
+          ) : (
+            <span className="text-gray-400 text-sm">
+              등록된 추천 작업이 없습니다
+            </span>
+          )}
         </div>
         <div className="divider"></div>
 

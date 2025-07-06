@@ -18,7 +18,7 @@ type Action =
   | { type: "SET_ACCURACY"; payload: number }
   | { type: "SET_USEFULNESS"; payload: number }
   | { type: "SET_SPEED"; payload: number }
-  | { type: "SET_STAR"; payload: number };
+  | { type: "SET_STAR"; payload: number | null };
 
 const initialState: State = {
   purpose: null,
@@ -116,18 +116,33 @@ const AiReviewForm = () => {
   };
 
   const renderStars = () => (
-    <div className="rating">
-      {[1, 2, 3, 4, 5].map((n) => (
-        <input
-          key={n}
-          type="radio"
-          name="satisfaction"
-          className="mask mask-star bg-yellow-400"
-          aria-label={`${n} star`}
-          checked={state.star === n}
-          onChange={() => dispatch({ type: "SET_STAR", payload: n })}
-        />
-      ))}
+    <div className="rating rating-lg rating-half">
+      <input
+        type="radio"
+        name="star"
+        className="rating-hidden"
+        aria-label="0 stars"
+        checked={state.star === null}
+        onChange={() => dispatch({ type: "SET_STAR", payload: null })}
+        readOnly
+        tabIndex={-1}
+      />
+      {[...Array(10)].map((_, i) => {
+        const value = (i + 1) * 0.5;
+        return (
+          <input
+            key={value}
+            type="radio"
+            name="star"
+            className={`mask mask-star-2 ${
+              i % 2 === 0 ? "mask-half-1" : "mask-half-2"
+            } bg-yellow-400`}
+            aria-label={`${value} star`}
+            checked={state.star === value}
+            onChange={() => dispatch({ type: "SET_STAR", payload: value })}
+          />
+        );
+      })}
     </div>
   );
 
