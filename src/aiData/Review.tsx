@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useAiStore, { type AiItem } from "../store/AiStore";
 import useAuthStore from "../store/AuthStore";
 import { fireStore } from "../firebase";
-import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 
 type State = {
   purpose: string | null;
@@ -95,8 +95,14 @@ const AiReviewForm = () => {
     }
 
     try {
-      const reviewRef = doc(collection(fireStore, `ai/${aiItem.id}/reviews`));
-      await setDoc(reviewRef, {
+      const reviewDocRef = doc(fireStore, `ai/${aiItem.id}/reviews`, user.uid);
+      const reviewSnap = await getDoc(reviewDocRef);
+      if (reviewSnap.exists()) {
+        alert("이미 이 AI에 리뷰를 등록하셨습니다.");
+        return;
+      }
+
+      await setDoc(reviewDocRef, {
         userId: user.uid,
         purpose: state.purpose,
         accuracy: state.accuracy,

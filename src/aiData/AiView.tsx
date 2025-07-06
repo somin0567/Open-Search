@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAiStore from "../store/AiStore";
 import useAuthStore from "../store/AuthStore";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { fireStore } from "../firebase";
 
 const calcAvg = (arr: unknown[]): number | null => {
@@ -57,10 +57,17 @@ const AiView = () => {
     );
   }
 
-  const handleReviewClick = () => {
+  const handleReviewClick = async () => {
     if (!user) {
       alert("로그인 후 리뷰 작성해주세요.");
       navigate("/signin");
+      return;
+    }
+
+    const reviewDocRef = doc(fireStore, `ai/${aiItem.id}/reviews`, user.uid);
+    const reviewSnap = await getDoc(reviewDocRef);
+    if (reviewSnap.exists()) {
+      alert("이미 리뷰를 등록하셨습니다.");
       return;
     }
     navigate(`/ai/${id}/review`);
