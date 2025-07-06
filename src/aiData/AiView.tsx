@@ -5,6 +5,12 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { fireStore } from "../firebase";
 
+const calcAvg = (arr: unknown[]): number | null => {
+  const nums = arr.filter((v): v is number => typeof v === "number");
+  if (nums.length === 0) return null;
+  return nums.reduce((a, b) => a + b, 0) / nums.length;
+};
+
 const AiView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -14,6 +20,9 @@ const AiView = () => {
   const { user } = useAuthStore();
 
   const [avgStar, setAvgStar] = useState<number | null>(null);
+  const [avgAccuracy, setAvgAccuracy] = useState<number | null>(null);
+  const [avgUsefulness, setAvgUsefulness] = useState<number | null>(null);
+  const [avgSpeed, setAvgSpeed] = useState<number | null>(null);
   const [recommendList, setRecommendList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -23,20 +32,16 @@ const AiView = () => {
       const snapshot = await getDocs(reviewsRef);
       const reviews = snapshot.docs.map((doc) => doc.data());
 
-      const starArr = reviews
-        .map((r) => r.star)
-        .filter((v): v is number => typeof v === "number");
-      const avg =
-        starArr.length > 0
-          ? starArr.reduce((a, b) => a + b, 0) / starArr.length
-          : null;
-      setAvgStar(avg);
+      setAvgStar(calcAvg(reviews.map((r) => r.star)));
+      setAvgAccuracy(calcAvg(reviews.map((r) => r.accuracy)));
+      setAvgUsefulness(calcAvg(reviews.map((r) => r.usefulness)));
+      setAvgSpeed(calcAvg(reviews.map((r) => r.speed)));
 
       const recommends = [
         ...new Set(
           reviews
             .map((r) => r.recommend)
-            .filter((v): v is string => !!v && v.trim() != ""),
+            .filter((v): v is string => !!v && v.trim() !== ""),
         ),
       ];
       setRecommendList(recommends);
@@ -74,32 +79,40 @@ const AiView = () => {
           </div>
           <div className="text-2xl font-bold">{aiItem.name}</div>
           <div className="text-gray-500 text-sm mb-2">{aiItem.category}</div>
-          <div className="rating rating-lg rating-half">
-            <input
-              type="radio"
-              name="avg-rating"
-              className="rating-hidden"
-              aria-label="0 stars"
-              readOnly
-              tabIndex={-1}
-            />
-            {[...Array(10)].map((_, i) => {
-              const value = (i + 1) * 0.5;
-              const checked =
-                typeof avgStar === "number" && Math.abs(value - avgStar) < 0.26;
-              return (
-                <input
-                  key={value}
-                  type="radio"
-                  name="avg-rating"
-                  className={`mask mask-star-2 ${i % 2 === 0 ? "mask-half-1" : "mask-half-2"} bg-yellow-400`}
-                  aria-label={`${value} star`}
-                  checked={checked}
-                  readOnly
-                  tabIndex={-1}
-                />
-              );
-            })}
+          <div className="flex items-center gap-2">
+            <div className="rating rating-lg rating-half">
+              <input
+                type="radio"
+                name="avg-rating"
+                className="rating-hidden"
+                aria-label="0 stars"
+                readOnly
+                tabIndex={-1}
+              />
+              {[...Array(10)].map((_, i) => {
+                const value = (i + 1) * 0.5;
+                const checked =
+                  typeof avgStar === "number" &&
+                  Math.abs(value - avgStar) < 0.26;
+                return (
+                  <input
+                    key={value}
+                    type="radio"
+                    name="avg-rating"
+                    className={`mask mask-star-2 ${
+                      i % 2 === 0 ? "mask-half-1" : "mask-half-2"
+                    } bg-yellow-400`}
+                    aria-label={`${value} star`}
+                    checked={checked}
+                    readOnly
+                    tabIndex={-1}
+                  />
+                );
+              })}
+            </div>
+            <span className="text-gray-600 text-sm">
+              {avgStar !== null ? avgStar.toFixed(1) : "0.0"} / 5
+            </span>
           </div>
         </div>
         <div className="divider"></div>
@@ -111,14 +124,9 @@ const AiView = () => {
               <span className="text-gray-500 text-sm">Plus</span>
               <span className="font-bold">{aiItem.price}</span>
             </div>
-            <div className="flex flex-col items-center">
-              <span className="text-gray-500 text-sm">Pro</span>
-              <span className="font-bold">20$</span>
-            </div>
           </div>
         </div>
-
-        <div className="mb-6 flex gap-2 flex-wrap">
+        <div className="mb-4 flex gap-2 flex-wrap">
           {recommendList.length > 0 ? (
             recommendList.map((rec) => (
               <button
@@ -138,8 +146,24 @@ const AiView = () => {
         <div className="divider"></div>
 
         <div>
-          <div className="font-bold mb-2">리뷰</div>
-          <div className="text-gray-400 text-center py-8">리뷰가 없음</div>
+          <div className="flex flex-col gap-2">
+            <div>
+              <span className="font-semibold">정확성: </span>
+              {avgAccuracy !== null ? avgAccuracy : "-"}
+            </div>
+            <div>
+              <span className="font-semibold">유용성: </span>
+              {avgUsefulness !== null ? avgUsefulness : "-"}
+            </div>
+            <div>
+              <span className="font-semibold">속도: </span>
+              {avgSpeed !== null ? avgSpeed : "-"}
+            </div>
+          </div>
+        </div>
+        <div className="divider"></div>
+
+        <div>
           <button
             className="btn mt-4 w-full py-2 font-semibold"
             onClick={handleReviewClick}
