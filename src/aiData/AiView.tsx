@@ -118,7 +118,7 @@ const AiView = () => {
   };
 
   return (
-    <div className="pt-16 p-8 w-full min-h-screen flex justify-center">
+    <div className="pt-20 p-8 w-full min-h-screen flex justify-center">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
           <div className="w-24 h-24 mb-4 flex items-center justify-center">
