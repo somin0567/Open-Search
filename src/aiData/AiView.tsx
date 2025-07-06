@@ -2,8 +2,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAiStore from "../store/AiStore";
 import useAuthStore from "../store/AuthStore";
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { fireStore } from "../firebase";
+import AiComments from "./AiComments";
 
 const calcAvg = (arr: unknown[]): number | null => {
   const nums = arr.filter((v): v is number => typeof v === "number");
@@ -24,29 +32,42 @@ const AiView = () => {
   const [avgUsefulness, setAvgUsefulness] = useState<number | null>(null);
   const [avgSpeed, setAvgSpeed] = useState<number | null>(null);
   const [recommendList, setRecommendList] = useState<string[]>([]);
+  const [comments, setComments] = useState<
+    { nickname: string; comment: string }[]
+  >([]);
+
+  const fetchComments = async () => {
+    if (!aiItem) return;
+    const reviewsRef = collection(fireStore, `ai/${aiItem.id}/reviews`);
+    const snapshot = await getDocs(reviewsRef);
+    const reviews = snapshot.docs.map((doc) => doc.data());
+
+    setAvgStar(calcAvg(reviews.map((r) => r.star)));
+    setAvgAccuracy(calcAvg(reviews.map((r) => r.accuracy)));
+    setAvgUsefulness(calcAvg(reviews.map((r) => r.usefulness)));
+    setAvgSpeed(calcAvg(reviews.map((r) => r.speed)));
+
+    const recommends = [
+      ...new Set(
+        reviews
+          .map((r) => r.recommend)
+          .filter((v): v is string => !!v && v.trim() !== ""),
+      ),
+    ];
+    setRecommendList(recommends);
+
+    setComments(
+      reviews
+        .filter((r) => r.comment && r.comment.trim() !== "")
+        .map((r) => ({
+          nickname: r.nickname || "익명",
+          comment: r.comment,
+        })),
+    );
+  };
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      if (!aiItem) return;
-      const reviewsRef = collection(fireStore, `ai/${aiItem.id}/reviews`);
-      const snapshot = await getDocs(reviewsRef);
-      const reviews = snapshot.docs.map((doc) => doc.data());
-
-      setAvgStar(calcAvg(reviews.map((r) => r.star)));
-      setAvgAccuracy(calcAvg(reviews.map((r) => r.accuracy)));
-      setAvgUsefulness(calcAvg(reviews.map((r) => r.usefulness)));
-      setAvgSpeed(calcAvg(reviews.map((r) => r.speed)));
-
-      const recommends = [
-        ...new Set(
-          reviews
-            .map((r) => r.recommend)
-            .filter((v): v is string => !!v && v.trim() !== ""),
-        ),
-      ];
-      setRecommendList(recommends);
-    };
-    fetchReviews();
+    fetchComments();
   }, [aiItem]);
 
   if (!aiItem) {
@@ -56,6 +77,29 @@ const AiView = () => {
       </div>
     );
   }
+
+  const handleAddComment = async (comment: string) => {
+    if (!user) return;
+    const reviewDocRef = doc(fireStore, `ai/${aiItem.id}/reviews`, user.uid);
+    const reviewSnap = await getDoc(reviewDocRef);
+
+    if (!reviewSnap.exists()) {
+      await setDoc(
+        reviewDocRef,
+        {
+          comment,
+          nickname: user.displayName || "익명",
+        },
+        { merge: true },
+      );
+    } else {
+      await updateDoc(reviewDocRef, {
+        comment,
+        nickname: user.displayName || "익명",
+      });
+    }
+    await fetchComments();
+  };
 
   const handleReviewClick = async () => {
     if (!user) {
@@ -150,6 +194,7 @@ const AiView = () => {
             </span>
           )}
         </div>
+
         <div className="divider"></div>
 
         <div>
@@ -168,6 +213,16 @@ const AiView = () => {
             </div>
           </div>
         </div>
+
+        <div className="divider"></div>
+
+        <AiComments
+          comments={comments}
+          onAddComment={handleAddComment}
+          isLoggedIn={!!user}
+          nickname={user?.displayName || "익명"}
+        />
+
         <div className="divider"></div>
 
         <div>
